@@ -1,6 +1,7 @@
 import os
 import re
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Optional
 
 import torch
@@ -9,8 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-# Ruta al modelo BERT/BETO entrenado (puede sobreescribirse con BETO_MODEL_PATH)
-MODEL_PATH = os.environ.get("BETO_MODEL_PATH", "./IA_dataset/beto-phishing-final")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_MODEL_PATH = PROJECT_ROOT / "IA_dataset" / "beto-phishing-final"
+
+# Ruta al modelo BERT/BETO entrenado dentro del proyecto (sin depender de Drive)
+MODEL_PATH = os.environ.get("BETO_MODEL_PATH", str(DEFAULT_MODEL_PATH))
 PHISHING_LABEL_IDX = int(os.environ.get("PHISHING_LABEL_IDX", "1"))
 INPUT_TEMPLATE = os.environ.get(
     "BETO_INPUT_TEMPLATE",
@@ -30,13 +34,17 @@ model = None
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     global tokenizer, model
-    if not os.path.exists(MODEL_PATH):
+    model_dir = Path(MODEL_PATH)
+    if not (model_dir / "config.json").exists():
         raise RuntimeError(
-            f"No se encontró la carpeta del modelo entrenado en: {MODEL_PATH}. "
-            "Coloca la carpeta IA_dataset/beto-phishing-final junto al proyecto o define BETO_MODEL_PATH."
+            f"Faltan los archivos del modelo entrenado en: {model_dir}. "
+            "Copia config.json, vocab.txt y model.safetensors (o pytorch_model.bin) "
+            "dentro de IA_dataset/beto-phishing-final."
         )
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(str(model_dir), local_files_only=True)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        str(model_dir), local_files_only=True
+    ).to(device)
     model.eval()
     yield
 
