@@ -1,0 +1,6 @@
+{
+  "name": "Correo Seguro BETO",
+  "description": "Simulador de correo electrónico con sesiones independientes para Emisor y Receptor que detecta enlaces y clasifica phishing mediante tu modelo BETO en FastAPI y Google Drive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
