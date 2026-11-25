@@ -1,8 +1,32 @@
+# Node / Frontend
 node_modules/
 build/
 dist/
 coverage/
-.DS_Store
 *.log
+npm-debug.log*
+
+# Python / Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Pesos grandes del modelo (obtener por separado y colocar en IA_dataset/beto-phishing-final/)
+*.safetensors
+pytorch_model.bin
+
+# Variables de entorno
 .env*
 !.env.example
+
+# Sistema operativo e IDEs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

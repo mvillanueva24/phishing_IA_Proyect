@@ -46,8 +46,7 @@ export function extractUrlsFromEmail(subject: string, body: string): UrlExtracti
   };
 }
 
-export const DEFAULT_INPUT_TEMPLATE =
-  'Asunto: {subject} | Cuerpo: {body} | URLs: {url_count}';
+export const DEFAULT_INPUT_TEMPLATE = 'Asunto: {subject} \nCuerpo: {body}';
 
 export function formatModelInputText(
   subject: string,

@@ -18,7 +18,7 @@ MODEL_PATH = os.environ.get("BETO_MODEL_PATH", str(DEFAULT_MODEL_PATH))
 PHISHING_LABEL_IDX = int(os.environ.get("PHISHING_LABEL_IDX", "1"))
 INPUT_TEMPLATE = os.environ.get(
     "BETO_INPUT_TEMPLATE",
-    "Asunto: {subject} | Cuerpo: {body} | URLs: {url_count}",
+    "Asunto: {subject} \nCuerpo: {body}",
 )
 
 URL_REGEX = re.compile(
